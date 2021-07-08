@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "vitawind": "^1.2.4",
-    "vue": "^3.0.5"
+    "vue": "^3.0.5",
+    "vue-router": "^4.0.10"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.4",
