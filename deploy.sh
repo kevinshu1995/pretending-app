@@ -16,8 +16,6 @@ git init
 git add -A
 git commit -m 'deploy'
 
-# if you are deploying to https://<USERNAME>.github.io
-
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
 git push -f git@github.com:kevinshu1995/pretending-app.git master:gh-pages
 
