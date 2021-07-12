@@ -8,7 +8,7 @@
         />
         <div class="container flex-grow flex flex-col">
             <HeadTitle title="World Clock" />
-            <SelectedZone />
+            <SelectedZone :selected-zones="['taipei', 'Los angeles']" />
         </div>
     </div>
 </template>

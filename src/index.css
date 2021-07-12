@@ -4,6 +4,6 @@
 
 @layer base {
     body {
-        @apply text-white font-almarai;
+        @apply text-white font-inter;
     }
 }
