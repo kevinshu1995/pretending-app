@@ -5,9 +5,11 @@
 
 ## 本專案使用到了~
 
--   JS Framework - Vue3
--   CSS Framework - TailwindCSS
--   build tool - Vite
+-   Vue 3
+-   TailwindCSS
+-   Vite
+-   Jest
+-   Ramda
 
 ## 各種開發前需要的東西
 
