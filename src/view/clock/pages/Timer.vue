@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-full flex flex-col">Timer</div>
+    <div class="min-h-full flex flex-col relative">Timer</div>
 </template>
 
 <script>

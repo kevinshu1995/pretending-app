@@ -1,5 +1,5 @@
 <template>
-    <nav ref="topTab" class="absolute left-0 top-0 w-full">
+    <nav ref="topTab" class="sticky left-0 top-0 w-full">
         <div
             class="
                 flex
@@ -15,7 +15,7 @@
                 class="px-4 py-2 text-orange-peel-500"
                 :class="leftTextClass"
                 :disabled="isLeftTextHide"
-                @click="topTabLeftOnclick"
+                @click="$emit('topTabLeftOnclick')"
             >
                 {{ leftText }}
             </button>
@@ -27,7 +27,7 @@
             </p>
             <button
                 class="px-4 py-2 text-orange-peel-500"
-                @click="topTabRightOnclick"
+                @click="$emit('topTabRightOnclick')"
             >
                 <template v-if="rightPlus">
                     <Plus />
@@ -38,12 +38,11 @@
             </button>
         </div>
     </nav>
-    <div :style="stuffingStyle"></div>
 </template>
 
 <script>
 import Plus from "@/components/svg/Plus.vue";
-import { computed, ref, onMounted } from "vue";
+import { computed, ref } from "vue";
 
 export default {
     props: {
@@ -75,14 +74,14 @@ export default {
         },
     },
 
+    emits: ["topTabRightOnclick", "topTabLeftOnclick"],
+
     components: {
         Plus,
     },
 
-    setup(props, { emit }) {
+    setup(props) {
         const topTab = ref(null);
-
-        const stuffingStyle = ref(0);
 
         const titleClass = computed(function () {
             return props.isTitleHide ? ["opacity-0"] : ["opacity-100"];
@@ -96,28 +95,11 @@ export default {
             return props.isLeftTextHide ? ["opacity-0"] : [];
         });
 
-        onMounted(() => {
-            stuffingStyle.value = `height: ${topTab.value.clientHeight}px`;
-        });
-
-        function topTabLeftOnclick() {
-            emit("topTabLeftOnclick");
-            console.log("topTabLeftOnclick");
-        }
-
-        function topTabRightOnclick() {
-            emit("topTabRightOnclick");
-            console.log("topTabRightOnclick");
-        }
-
         return {
-            topTabLeftOnclick,
-            topTabRightOnclick,
             titleClass,
             topTabClass,
             leftTextClass,
             topTab,
-            stuffingStyle,
         };
     },
 };

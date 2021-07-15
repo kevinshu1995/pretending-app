@@ -25,7 +25,6 @@
 
 <script>
 import BottomNavigation from "@/components/clock/BottomNavigation.vue";
-
 export default {
     name: "ClockIndex",
     components: {

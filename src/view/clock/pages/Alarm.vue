@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-full flex flex-col">
+    <div class="min-h-full flex flex-col relative">
         <TopTab
             right-plus
             left-text="Edit"

@@ -23,13 +23,21 @@
                     "
                 >
                     <div class="flex-grow flex flex-col justify-center">
-                        <div class="flex space-x-1 text-sm text-dove-gray-500">
+                        <div
+                            class="
+                                flex
+                                space-x-1
+                                text-sm
+                                font-light
+                                text-dove-gray-500
+                            "
+                        >
                             <p class="">{{ zone.relative.day }},</p>
                             <p class="flex items-center">
-                                <span class="font-bold">
+                                <span>
                                     {{ zone.relative.order }}
                                 </span>
-                                <span class="font-bold">
+                                <span>
                                     {{ zone.relative.hour }}
                                 </span>
                                 <span>HRS</span>

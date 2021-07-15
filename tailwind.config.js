@@ -93,6 +93,16 @@ module.exports = {
                     900: "#7c4e05",
                 },
             },
+            keyframes: {
+                slideIn: {
+                    "0%": { transform: "translateY(100%)" },
+                    "100%": { transform: "translateY(0)" },
+                },
+            },
+            animation: {
+                "slide-DownIn": "slideIn .5s ease-in-out",
+                "slide-DownOut": "slideIn .5s ease-in-out reverse",
+            },
         },
     },
     variants: {
