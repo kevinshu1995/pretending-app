@@ -56,6 +56,8 @@
 
 <script>
 import { computed } from "vue";
+import time from "@/hook/time.js";
+
 export default {
     name: "SelectedZone",
     props: {
@@ -68,8 +70,25 @@ export default {
         },
     },
     setup(props) {
+        const formatselectedZones = obj => {
+            return {
+                zoneName: obj.name,
+                time: "02:06",
+                relative: {
+                    order: "+",
+                    day: "Today",
+                    hour: obj.zone.offset,
+                },
+                data: obj,
+            };
+        };
+
+        console.log(time.now_timeOffset_0());
+
         // 根據傳進來的 zones 轉換成需要的格式
         const formatZones = computed(function () {
+            // props.selectedZones
+            // const formatselectedZones
             return [
                 {
                     zoneName: "Taipei",
@@ -79,6 +98,7 @@ export default {
                         day: "Today",
                         hour: "0",
                     },
+                    data: props.selectedZones,
                 },
                 {
                     zoneName: "Los Angeles",
@@ -88,6 +108,7 @@ export default {
                         day: "Yesterday",
                         hour: "15",
                     },
+                    data: props.selectedZones,
                 },
             ];
         });
