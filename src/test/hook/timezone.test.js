@@ -14,5 +14,5 @@ test("GMT matching!", () => {
 test("Filter slash in string!", () => {
     const utcName = "Africa/Abidjan";
 
-    expect(filtered_slash(utcName)).toBe("Abidjan, Africa");
+    expect(filtered_slash(utcName)).toBe("Abidjan");
 });

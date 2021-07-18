@@ -26,7 +26,7 @@ function isNotIncludeGMT(utcNameString) {
  *
  */
 function filtered_slash(utcName) {
-    return R.compose(R.join(", "), R.reverse, R.split("/"))(utcName);
+    return R.compose(R.join(""), R.drop(1), R.split("/"))(utcName);
 }
 
 /**

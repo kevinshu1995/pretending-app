@@ -23,4 +23,25 @@ function findKeyByValue(dataArray, keyToFind, inputValue) {
     return R.find(R.propEq(keyToFind, inputValue))(dataArray);
 }
 
-export default { filterMatchedItems, arraySortByKey, findKeyByValue };
+/**
+ *
+ * @param {Number} number 要轉換的數字
+ * @param {Number} length 最後的長度
+ *
+ * @returns {String}
+ */
+function pad_with_zeros(number, length = 2) {
+    if (number < 0) throw "Input number should be GREATER than 0.";
+    let toString = R.toString(number);
+    while (toString.length < length) {
+        toString = "0" + toString;
+    }
+    return toString;
+}
+
+export default {
+    filterMatchedItems,
+    arraySortByKey,
+    findKeyByValue,
+    pad_with_zeros,
+};

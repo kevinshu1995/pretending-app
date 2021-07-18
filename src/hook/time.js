@@ -1,51 +1,62 @@
 import * as R from "ramda";
+import unixtime from "./api/unixtime";
 
-const timeZoneOffset = now => now.getTimezoneOffset() / 60;
+const dateTimeReg = () =>
+    new RegExp(
+        /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(([\+|-])(\d{2}):(\d{2})|Z)/
+    );
 
-const getHour = now => now.getHours();
-
-const getMinute = now => now.getMinutes();
-
-const decimal_to_sexagesimalScale = value => (Number(value) / 10) * 60;
-
-const toString = value => String(value);
-
-function isInt(number) {
-    return (typeof n === "number" && number % 1 === 0) || number % 1 === -0;
-}
-
-function dealTimeZoneOffset(now) {
-    const _timeZoneOffset = timeZoneOffset(now);
-    if (isInt(_timeZoneOffset)) {
-        return {
-            hours: _timeZoneOffset,
-            extraMinutes: 0,
-        };
-    } else {
-        splitHour(_timeZoneOffset);
+async function get_currentDateTime_unixTimestamp() {
+    try {
+        const { data } = await unixtime.get_currentDateTime_unixTimestamp();
+        return data.UnixTimeStamp;
+    } catch (error) {
+        return `get_currentDateTime_unixTimestamp -- ${error}`;
     }
 }
 
-function splitHour(value) {
-    const _toString = toString(value);
-    // TODO 考慮負值
-    const [hours, minutes] = R.split(".", _toString);
-    return {
-        hours: Number(hours),
-        extraMinutes: decimal_to_sexagesimalScale(minutes),
-    };
+async function getDateTimeString(stampAndTimezone) {
+    try {
+        const { data } =
+            await unixtime.post_unixTimestampToDateTimeWithTimezone(
+                stampAndTimezone
+            );
+        return data.Datetime;
+    } catch (error) {
+        return `getDateTimeString -- ${error}`;
+    }
 }
 
-const timeOffset_0 = () => {
-    const now = new Date();
-    const getTimeZoneOffset = dealTimeZoneOffset(now);
-    return {
-        hours: getHour(now) + getTimeZoneOffset.hours,
-        minutes: getMinute(now) + getTimeZoneOffset.extraMinutes,
-    };
-};
+async function formateDateTime(stampAndTimezone = {}) {
+    if (typeof stampAndTimezone !== "object")
+        throw "stampAndTimezone's datatype is wrong";
+    try {
+        stampAndTimezone.UnixTimeStamp =
+            stampAndTimezone.UnixTimeStamp ||
+            (await get_currentDateTime_unixTimestamp());
+
+        const dateTime = await getDateTimeString(stampAndTimezone);
+        const [originData, year, month, date, hour, minute, second, ...offset] =
+            [...dateTime.match(dateTimeReg())];
+
+        return {
+            originData,
+            year,
+            month,
+            date,
+            hour,
+            minute,
+            second,
+            offset,
+        };
+    } catch (error) {
+        return `formateDateTime -- ${error}`;
+    } finally {
+    }
+}
 
 export default {
-    now: new Date(),
-    now_timeOffset_0: timeOffset_0,
+    get_currentDateTime_unixTimestamp,
+    getDateTimeString,
+    formateDateTime,
 };

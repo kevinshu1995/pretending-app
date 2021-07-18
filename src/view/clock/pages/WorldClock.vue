@@ -6,10 +6,15 @@
             title="World Clock"
             :is-title-hide="false"
             @topTabRightOnclick="toggleTimezoneList"
+            @topTabLeftOnclick="toggleEditMode"
         />
         <div class="container flex-grow flex flex-col">
             <HeadTitle title="World Clock" />
-            <SelectedZone :selected-zones="selectedZones" />
+            <SelectedZone
+                :is-edit="isEdit"
+                :selected-zones="selectedZoneList.list"
+                @onDelete="deleteTimezone"
+            />
         </div>
         <TimezoneList
             :is-show="isShowTimezoneList"
@@ -24,7 +29,9 @@ import TopTab from "@/components/clock/TopTab.vue";
 import HeadTitle from "@/components/clock/HeadTitle.vue";
 import SelectedZone from "@/components/clock/worldClock/SelectedZone.vue";
 import TimezoneList from "@/components/clock/worldClock/TimezoneList.vue";
-import { ref } from "vue";
+import Localstorage from "@/hook/localstorage";
+import DealData from "@/hook/dealData";
+import { reactive, ref, watch, onMounted } from "vue";
 import * as R from "ramda";
 
 export default {
@@ -37,7 +44,19 @@ export default {
     },
     setup() {
         const isShowTimezoneList = ref(false);
-        const selectedZones = ref([]);
+        const selectedZoneList = reactive({ list: [] });
+        const isEdit = ref(false);
+
+        onMounted(() => {
+            getDefaultZoneList();
+        });
+
+        watch(
+            () => [...selectedZoneList.list],
+            zones => {
+                Localstorage.set("selectedZoneList", zones);
+            }
+        );
 
         function toggleTimezoneList() {
             isShowTimezoneList.value = !isShowTimezoneList.value;
@@ -47,32 +66,46 @@ export default {
          * @param {Object} 要被比對的物件
          * @return {Boolean}
          */
-        function isNoRepeat(targetTimezone) {
+        function isRepeat(targetTimezone) {
             return R.find(R.propEq("name", targetTimezone.name))(
-                selectedZones.value
+                selectedZoneList.list
             ) === undefined
-                ? false
-                : true;
+                ? true
+                : false;
+        }
+
+        function getDefaultZoneList() {
+            selectedZoneList.list = [...Localstorage.get("selectedZoneList")];
         }
 
         function addNewTimezone(targetTimezone) {
-            console.log(targetTimezone);
-            if (isNoRepeat(targetTimezone))
-                selectedZones.value.push(targetTimezone);
+            if (isRepeat(targetTimezone))
+                selectedZoneList.list.push(targetTimezone);
             isShowTimezoneList.value = false;
         }
 
-        function deleteTimezone(targetTimezone) {
-            // selectedZones.value
-            // Timezone.findZoneByAbbr(targetTimezone.zoneAbbr);
-            // console.log(Timezone.findZoneByAbbr(targetTimezone.zoneAbbr));
+        function deleteTimezone(targetAbbr) {
+            const filterWithAbbr = currentZone =>
+                currentZone.zoneAbbr !== targetAbbr;
+            selectedZoneList.list = R.filter(
+                filterWithAbbr,
+                selectedZoneList.list
+            );
+            toggleEditMode();
+        }
+
+        function toggleEditMode() {
+            isEdit.value = !isEdit.value;
         }
 
         return {
             isShowTimezoneList,
             toggleTimezoneList,
+            toggleEditMode,
+            deleteTimezone,
             addNewTimezone,
-            selectedZones,
+            selectedZoneList,
+            isEdit,
         };
     },
 };
