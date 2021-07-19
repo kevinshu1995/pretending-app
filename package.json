@@ -14,7 +14,8 @@
         "timezones.json": "^1.5.2",
         "vitawind": "^1.2.4",
         "vue": "^3.0.5",
-        "vue-router": "^4.0.10"
+        "vue-router": "^4.0.10",
+        "vuex": "^4.0.2"
     },
     "devDependencies": {
         "@babel/core": "^7.14.6",

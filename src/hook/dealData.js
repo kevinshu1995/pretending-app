@@ -24,6 +24,16 @@ function findKeyByValue(dataArray, keyToFind, inputValue) {
 }
 
 /**
+ * @param {Object} 要被比對的物件
+ * @return {Boolean}
+ */
+function isRepeatByKey(dataArray, obj, key) {
+    return R.find(R.propEq(key, obj[key]))(dataArray) === undefined
+        ? true
+        : false;
+}
+
+/**
  *
  * @param {Number} number 要轉換的數字
  * @param {Number} length 最後的長度
@@ -44,4 +54,5 @@ export default {
     arraySortByKey,
     findKeyByValue,
     pad_with_zeros,
+    isRepeatByKey,
 };

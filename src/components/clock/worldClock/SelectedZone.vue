@@ -1,6 +1,6 @@
 <template>
     <div class="flex-grow flex">
-        <template v-if="formatZones.length === 0 || isLoading">
+        <template v-if="formatZoneList.length === 0 || isLoading">
             <div class="flex-grow self-center">
                 <h2 class="text-dove-gray-500 text-center text-2xl">
                     No World Clocks
@@ -10,7 +10,7 @@
         <template v-else>
             <ul class="flex-grow flex flex-col">
                 <transition-group
-                    v-for="(zone, index) in formatZones"
+                    v-for="(zone, index) in formatZoneList"
                     :key="`zone-${index}`"
                     tag="li"
                     name="list"
@@ -105,8 +105,7 @@
 import MinusCircleSolid from "@/components/svg/Minus-circle-solid.vue";
 import Menu from "@/components/svg/Menu.vue";
 import { computed, onMounted, ref } from "vue";
-import time from "@/hook/time.js";
-import DealData from "@/hook/dealData.js";
+import Time from "@/hook/time.js";
 import * as R from "ramda";
 
 export default {
@@ -134,21 +133,20 @@ export default {
     setup(props) {
         const unixtimeNow = ref({});
         const isLoading = ref(false);
-        onMounted(async () => {
+        onMounted(() => {
             isLoading.value = true;
-            unixtimeNow.value = await time.formateDateTime();
+            unixtimeNow.value = Time.now();
             isLoading.value = false;
         });
 
-        const formatZones = computed(() => {
+        const formatZoneList = computed(() => {
             const curryZoneFormat = R.curry(zoneFormat);
-            console.log(R.map(curryZoneFormat, props.selectedZones));
             return R.map(curryZoneFormat, props.selectedZones);
         });
 
         function zoneFormat(zone) {
-            const time = selectedZoneTime(zone.zone.offset);
-            const relative = relativeWithLocal(zone.zone.offset);
+            const time = Time.getTargetOffsetTime(zone.zone.offset);
+            const relative = Time.relativeWithLocal(zone.zone.offset);
             return {
                 zoneName: zone.name,
                 time: `${time.hour}:${time.minute}`,
@@ -160,71 +158,8 @@ export default {
             };
         }
 
-        function relativeWithLocal(targetOffset) {
-            const localOffset = R.negate(new Date().getTimezoneOffset()) / 60;
-            const localHour = new Date().getHours();
-
-            // * 會超過 24 或小於 0
-            const targetHour = localHour + targetOffset - localOffset;
-            let day;
-            if (targetHour > 23) day = "Tomorrow";
-            if (targetHour < 0) day = "Yesterday";
-            else day = "Today";
-            const offsetHour = () =>
-                targetOffset - localOffset > 0
-                    ? `+${targetOffset - localOffset}`
-                    : targetOffset - localOffset;
-            return {
-                day,
-                hour: offsetHour(),
-            };
-        }
-
-        function selectedZoneTime(targetOffset) {
-            // * 傳入的 offset
-            const offsetAllMinutes = targetOffset * 60;
-            const divideMinute = R.divide(R.__, 60);
-
-            const currentTime = {
-                hour: unixtimeNow.value.hour || 0,
-                minute: unixtimeNow.value.minute || 0,
-            };
-
-            // TODO 個位數要補零
-            const target_minute = R.modulo(
-                Number(currentTime.minute) + offsetAllMinutes,
-                60
-            );
-
-            const target_hour = R.modulo(
-                Number(currentTime.hour) +
-                    divideMinute(
-                        Number(currentTime.minute) +
-                            offsetAllMinutes -
-                            target_minute
-                    ),
-                24
-            );
-
-            const deal_negative_time = time =>
-                R.cond([
-                    [R.equals(-0), R.always(0)],
-                    [R.gt(0), x => time + x],
-                    [R.T, x => x],
-                ]);
-
-            return {
-                hour: DealData.pad_with_zeros(
-                    deal_negative_time(24)(target_hour)
-                ),
-                minute: DealData.pad_with_zeros(
-                    deal_negative_time(60)(target_minute)
-                ),
-            };
-        }
-
         return {
-            formatZones,
+            formatZoneList,
             isLoading,
         };
     },

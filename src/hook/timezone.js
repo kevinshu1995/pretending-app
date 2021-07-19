@@ -2,6 +2,14 @@ import * as R from "ramda";
 import DealData from "./dealData.js";
 import timezones from "timezones.json";
 
+function getTimezones() {
+    const tz = timezones;
+    function fn() {
+        return tz;
+    }
+    return fn();
+}
+
 /**
  *
  * @param {String} utcName
@@ -33,7 +41,8 @@ function filtered_slash(utcName) {
  * Get a timezone list restructured and not included GMT in utc
  * @returns {Array}
  */
-function getTimezoneName(timezone = timezones) {
+function getTimezoneName() {
+    const tz = getTimezones();
     const groupNames = (accumulator, zone) => {
         const restructure = areaNameString => {
             return {
@@ -46,7 +55,7 @@ function getTimezoneName(timezone = timezones) {
             R.compose(R.map(restructure), R.filter(isNotIncludeGMT))(zone.utc)
         );
     };
-    return R.reduce(groupNames, [], timezone);
+    return R.reduce(groupNames, [], tz);
 }
 
 function getSortedTimezoneByName() {
@@ -54,7 +63,8 @@ function getSortedTimezoneByName() {
 }
 
 function findZoneByAbbr(abbr) {
-    return DealData.findKeyByValue(timezones, "abbr", abbr);
+    const tz = getTimezones();
+    return DealData.findKeyByValue(tz, "abbr", abbr);
 }
 
 export default {

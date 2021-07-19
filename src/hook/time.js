@@ -1,62 +1,114 @@
 import * as R from "ramda";
-import unixtime from "./api/unixtime";
+import DealData from "./dealData";
 
 const dateTimeReg = () =>
     new RegExp(
         /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(([\+|-])(\d{2}):(\d{2})|Z)/
     );
 
-async function get_currentDateTime_unixTimestamp() {
-    try {
-        const { data } = await unixtime.get_currentDateTime_unixTimestamp();
-        return data.UnixTimeStamp;
-    } catch (error) {
-        return `get_currentDateTime_unixTimestamp -- ${error}`;
-    }
+const ISOStringReg = () =>
+    new RegExp(/.?(\d{4,5})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})Z/);
+
+function now() {
+    return new Date();
 }
 
-async function getDateTimeString(stampAndTimezone) {
-    try {
-        const { data } =
-            await unixtime.post_unixTimestampToDateTimeWithTimezone(
-                stampAndTimezone
-            );
-        return data.Datetime;
-    } catch (error) {
-        return `getDateTimeString -- ${error}`;
-    }
+function getISOString() {
+    return now().toISOString();
 }
 
-async function formateDateTime(stampAndTimezone = {}) {
-    if (typeof stampAndTimezone !== "object")
-        throw "stampAndTimezone's datatype is wrong";
-    try {
-        stampAndTimezone.UnixTimeStamp =
-            stampAndTimezone.UnixTimeStamp ||
-            (await get_currentDateTime_unixTimestamp());
+function getISOTimestamp() {
+    return Math.floor(now() / 1000);
+}
 
-        const dateTime = await getDateTimeString(stampAndTimezone);
-        const [originData, year, month, date, hour, minute, second, ...offset] =
-            [...dateTime.match(dateTimeReg())];
+function getUnixtimeByClient() {
+    return R.match(ISOStringReg())(getISOString());
+}
 
-        return {
-            originData,
-            year,
-            month,
-            date,
-            hour,
-            minute,
-            second,
-            offset,
-        };
-    } catch (error) {
-        return `formateDateTime -- ${error}`;
-    } finally {
-    }
+function formateDateTime() {
+    const [originData, year, month, date, hour, minute, second, ...rest] = [
+        ...getUnixtimeByClient(),
+    ];
+    return {
+        originData,
+        year,
+        month,
+        date,
+        hour,
+        minute,
+        second,
+        rest,
+    };
+}
+
+/**
+ *
+ * @param {String} targetOffset
+ * @returns {Object} 回傳相對時間 day & hour
+ */
+function relativeWithLocal(targetOffset) {
+    const localOffset = R.negate(new Date().getTimezoneOffset()) / 60;
+    const localHour = new Date().getHours();
+
+    // * 會超過 24 或小於 0
+    const targetHour = localHour + targetOffset - localOffset;
+    let day;
+    if (targetHour > 23) day = "Tomorrow";
+    if (targetHour < 0) day = "Yesterday";
+    else day = "Today";
+    const offsetHour = () =>
+        targetOffset - localOffset > 0
+            ? `+${targetOffset - localOffset}`
+            : targetOffset - localOffset;
+    return {
+        day,
+        hour: offsetHour(),
+    };
+}
+
+/**
+ * @param {Number}
+ * @returns {Object}  使用者端相對指定 timeoffset 的當地時間 & 補零
+ */
+function getTargetOffsetTime(targetOffset) {
+    // * 傳入的 offset
+    const offsetAllMinutes = targetOffset * 60;
+    const divideMinute = R.divide(R.__, 60);
+
+    const currentTime = {
+        hour: formateDateTime().hour || 0,
+        minute: formateDateTime().minute || 0,
+    };
+
+    const target_minute = R.modulo(
+        Number(currentTime.minute) + offsetAllMinutes,
+        60
+    );
+
+    const target_hour = R.modulo(
+        Number(currentTime.hour) +
+            divideMinute(
+                Number(currentTime.minute) + offsetAllMinutes - target_minute
+            ),
+        24
+    );
+
+    const deal_negative_time = time =>
+        R.cond([
+            [R.equals(-0), R.always(0)],
+            [R.gt(0), x => time + x],
+            [R.T, x => x],
+        ]);
+
+    return {
+        hour: DealData.pad_with_zeros(deal_negative_time(24)(target_hour)),
+        minute: DealData.pad_with_zeros(deal_negative_time(60)(target_minute)),
+    };
 }
 
 export default {
-    get_currentDateTime_unixTimestamp,
-    getDateTimeString,
     formateDateTime,
+    relativeWithLocal,
+    getTargetOffsetTime,
+    now,
 };
