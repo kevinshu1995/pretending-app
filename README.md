@@ -30,3 +30,20 @@
 -   ~~Public Sans~~
     -   ~~[Google Font Link](https://fonts.google.com/specimen/Public+Sans?query=public)~~
     -   ~~用於數字，千萬不要用 Almarai 字體，數字辨識度較差~~
+
+### Todo
+
+-   [ ] WorldClock
+    -   [x] 切版
+    -   [ ] 功能
+        -   [ ] 篩選已選擇選項
+    -   [ ] 重構
+-   [ ] Alarm
+    -   [ ] 切版
+    -   [ ] 功能
+-   [ ] Stopwatch
+    -   [ ] 切版
+    -   [ ] 功能
+-   [ ] Timer
+    -   [ ] 切版
+    -   [ ] 功能
