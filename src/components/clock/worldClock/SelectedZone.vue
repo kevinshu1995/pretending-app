@@ -16,6 +16,7 @@
                     name="list"
                     class="
                         flex
+                        items-center
                         py-2.5
                         border-t
                         last-of-type:border-b
@@ -60,7 +61,7 @@
                                 <span>HRS</span>
                             </p>
                         </div>
-                        <h2 class="text-2xl">
+                        <h2 class="text-lg xs:text-2xl">
                             {{ zone.zoneName }}
                         </h2>
                     </div>
@@ -73,7 +74,7 @@
                         <template v-if="!isEdit">
                             <div
                                 :key="`selectedZone-time-${index}`"
-                                class="font-light text-6xl pr-4"
+                                class="font-light text-5xl xs:text-6xl pr-4"
                             >
                                 {{ zone.time }}
                             </div>
@@ -104,8 +105,8 @@
 <script>
 import MinusCircleSolid from "@/components/svg/Minus-circle-solid.vue";
 import Menu from "@/components/svg/Menu.vue";
-import { computed, onMounted, ref } from "vue";
-import Time from "@/hook/time.js";
+import { computed, ref } from "vue";
+import TIME from "@/hook/time.js";
 import * as R from "ramda";
 
 export default {
@@ -131,13 +132,8 @@ export default {
     },
     emits: ["onDelete"],
     setup(props) {
-        const unixtimeNow = ref({});
+        const Time = TIME();
         const isLoading = ref(false);
-        onMounted(() => {
-            isLoading.value = true;
-            unixtimeNow.value = Time.now();
-            isLoading.value = false;
-        });
 
         const formatZoneList = computed(() => {
             const curryZoneFormat = R.curry(zoneFormat);

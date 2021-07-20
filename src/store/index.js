@@ -3,12 +3,22 @@ import { createStore } from "vuex";
 const store = createStore({
     state() {
         return {
-            count: 0,
+            now: 0,
         };
     },
+    getters: {
+        getNow(state) {
+            return state.now;
+        },
+    },
     mutations: {
-        increment(state) {
-            state.count++;
+        SET_CURRENT_TIME(state) {
+            state.now = new Date();
+        },
+    },
+    actions: {
+        setCurrentTime(context) {
+            context.commit("SET_CURRENT_TIME");
         },
     },
 });
