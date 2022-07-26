@@ -25,17 +25,17 @@
 </template>
 
 <script>
-import TopTab from "@/components/clock/TopTab.vue";
-import HeadTitle from "@/components/clock/HeadTitle.vue";
-import SelectedZone from "@/components/clock/worldClock/SelectedZone.vue";
-import TimezoneList from "@/components/clock/worldClock/TimezoneList.vue";
-import Localstorage from "@/hook/localstorage";
-import DealData from "@/hook/dealData";
-import { reactive, ref, watch, onMounted } from "vue";
-import * as R from "ramda";
+import TopTab from '@/components/clock/TopTab.vue'
+import HeadTitle from '@/components/clock/HeadTitle.vue'
+import SelectedZone from '@/components/clock/worldClock/SelectedZone.vue'
+import TimezoneList from '@/components/clock/worldClock/TimezoneList.vue'
+import Localstorage from '@/hook/localstorage'
+import DealData from '@/hook/dealData'
+import { reactive, ref, watch, onMounted } from 'vue'
+import * as R from 'ramda'
 
 export default {
-    name: "WorldClock",
+    name: 'WorldClock',
     components: {
         TopTab,
         HeadTitle,
@@ -43,55 +43,43 @@ export default {
         TimezoneList,
     },
     setup() {
-        const isShowClientTimezoneList = ref(false);
-        const selectedClientTimezone = reactive({ list: [] });
-        const isEdit = ref(false);
+        const isShowClientTimezoneList = ref(false)
+        const selectedClientTimezone = reactive({ list: [] })
+        const isEdit = ref(false)
 
         onMounted(() => {
-            getDefaultClientList();
-        });
+            getDefaultClientList()
+        })
 
         watch(
             () => [...selectedClientTimezone.list],
-            zones => {
-                Localstorage.set("selectedClientTimezone", zones);
+            (zones) => {
+                Localstorage.set('selectedClientTimezone', zones)
             }
-        );
+        )
 
         function toggleTimezoneList() {
-            isShowClientTimezoneList.value = !isShowClientTimezoneList.value;
+            isShowClientTimezoneList.value = !isShowClientTimezoneList.value
         }
 
         function getDefaultClientList() {
-            selectedClientTimezone.list = [
-                ...Localstorage.get("selectedClientTimezone"),
-            ];
+            selectedClientTimezone.list = [...Localstorage.get('selectedClientTimezone')]
         }
 
         function addClientTimezone(targetTimezone) {
-            if (
-                DealData.isRepeatByKey(
-                    selectedClientTimezone.list,
-                    targetTimezone,
-                    "name"
-                )
-            )
-                selectedClientTimezone.list.push(targetTimezone);
-            isShowClientTimezoneList.value = false;
+            if (DealData.isRepeatByKey(selectedClientTimezone.list, targetTimezone, 'name'))
+                selectedClientTimezone.list.push(targetTimezone)
+            isShowClientTimezoneList.value = false
         }
 
         function deleteTimezone(targetAbbr) {
-            const filterWithAbbr = currentZone =>
-                currentZone.zoneAbbr !== targetAbbr;
-            selectedClientTimezone.list = R.filter(
-                filterWithAbbr,
-                selectedClientTimezone.list
-            );
-            toggleEditMode();
+            const filterWithAbbr = (currentZone) => currentZone.zoneAbbr !== targetAbbr
+            selectedClientTimezone.list = R.filter(filterWithAbbr, selectedClientTimezone.list)
+            toggleEditMode()
         }
 
         function toggleEditMode() {
-            isEdit.value = !isEdit.value;
+            isEdit.value = !isEdit.value
         }
 
         return {
@@ -102,7 +90,7 @@ export default {
             addClientTimezone,
             selectedClientTimezone,
             isEdit,
-        };
+        }
     },
-};
+}
 </script>

@@ -1,26 +1,14 @@
 <template>
     <nav class="w-full">
         <div
-            class="
-                flex
-                justify-between
-                bg-shark-900 bg-opacity-70
-                backdrop-blur-lg
-                border-t border-shark-500
-                pt-1
-                sm:pt-2
-                pb-1
-            "
+            class="flex justify-between bg-shark-900 bg-opacity-70 backdrop-blur-lg border-t border-shark-500 pt-1 sm:pt-2 pb-1"
         >
             <div
                 v-for="link in navigationLinks"
                 :key="`BottomNavigationLink-${link.name}`"
                 class="w-1/4"
             >
-                <router-link
-                    :to="link.href"
-                    class="text-dove-gray-500 transition-all"
-                >
+                <router-link :to="link.href" class="text-dove-gray-500 transition-all">
                     <span class="flex flex-col items-center sm:space-y-1">
                         <component
                             :is="link.icon"
@@ -39,11 +27,11 @@
 </template>
 
 <script>
-import WorldClock from "@/components/svg/WorldClock.vue";
-import Alarm from "@/components/svg/Alarm.vue";
-import Stopwatch from "@/components/svg/Stopwatch.vue";
-import Timer from "@/components/svg/Timer.vue";
-import { markRaw } from "vue";
+import WorldClock from '@/components/svg/WorldClock.vue'
+import Alarm from '@/components/svg/Alarm.vue'
+import Stopwatch from '@/components/svg/Stopwatch.vue'
+import Timer from '@/components/svg/Timer.vue'
+import { markRaw } from 'vue'
 
 export default {
     components: {
@@ -55,37 +43,37 @@ export default {
     setup() {
         const navigationLinks = markRaw([
             {
-                name: "World Clock",
+                name: 'World Clock',
                 icon: WorldClock,
                 href: {
-                    name: "WorldClock",
+                    name: 'WorldClock',
                 },
             },
             {
-                name: "Alarm",
+                name: 'Alarm',
                 icon: Alarm,
                 href: {
-                    name: "Alarm",
+                    name: 'Alarm',
                 },
             },
             {
-                name: "Stopwatch",
+                name: 'Stopwatch',
                 icon: Stopwatch,
                 href: {
-                    name: "Stopwatch",
+                    name: 'Stopwatch',
                 },
             },
             {
-                name: "Timer",
+                name: 'Timer',
                 icon: Timer,
                 href: {
-                    name: "Timer",
+                    name: 'Timer',
                 },
             },
-        ]);
+        ])
         return {
             navigationLinks,
-        };
+        }
     },
-};
+}
 </script>

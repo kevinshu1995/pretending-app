@@ -4,6 +4,6 @@
 
 <script>
 export default {
-    name: "Timer",
-};
+    name: 'Timer',
+}
 </script>

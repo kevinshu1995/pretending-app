@@ -1,42 +1,40 @@
-import { arraySortByKey, findKeyByValue } from "@/hook/dealData.js";
-import { expect, test } from "@jest/globals";
+import { arraySortByKey, findKeyByValue } from '@/hook/dealData.js'
+import { expect, test } from '@jest/globals'
 
-test("Sort array by name!", () => {
+test('Sort array by name!', () => {
     const arrayInput = [
         {
-            name: "John",
+            name: 'John',
         },
         {
-            name: "Alice",
+            name: 'Alice',
         },
-    ];
+    ]
     const expectReturn = [
         {
-            name: "Alice",
+            name: 'Alice',
         },
         {
-            name: "John",
+            name: 'John',
         },
-    ];
-    expect(arraySortByKey(arrayInput, "name")).toMatchObject(expectReturn);
-});
+    ]
+    expect(arraySortByKey(arrayInput, 'name')).toMatchObject(expectReturn)
+})
 
-test("Find object by specific key!", () => {
+test('Find object by specific key!', () => {
     const arrayInput = [
         {
-            zoneAbbr: "TAT",
+            zoneAbbr: 'TAT',
         },
         {
-            zoneAbbr: "CAST",
+            zoneAbbr: 'CAST',
         },
         {
-            zoneAbbr: "QQ",
+            zoneAbbr: 'QQ',
         },
-    ];
+    ]
     const expectReturn = {
-        zoneAbbr: "CAST",
-    };
-    expect(findKeyByValue(arrayInput, "zoneAbbr", "CAST")).toMatchObject(
-        expectReturn
-    );
-});
+        zoneAbbr: 'CAST',
+    }
+    expect(findKeyByValue(arrayInput, 'zoneAbbr', 'CAST')).toMatchObject(expectReturn)
+})

@@ -1,14 +1,7 @@
 <template>
     <nav ref="topTab" class="sticky left-0 top-0 w-full">
         <div
-            class="
-                flex
-                text-base
-                xs:text-lg
-                font-bold
-                backdrop-blur-lg
-                bg-shark-900 bg-opacity-70
-            "
+            class="flex text-base xs:text-lg font-bold backdrop-blur-lg bg-shark-900 bg-opacity-70"
             :class="topTabClass"
         >
             <button
@@ -19,16 +12,10 @@
             >
                 {{ leftText }}
             </button>
-            <p
-                class="flex-grow font-black text-center py-2 transition-all"
-                :class="titleClass"
-            >
+            <p class="flex-grow font-black text-center py-2 transition-all" :class="titleClass">
                 {{ title }}
             </p>
-            <button
-                class="px-4 py-2 text-orange-peel-500"
-                @click="$emit('topTabRightOnclick')"
-            >
+            <button class="px-4 py-2 text-orange-peel-500" @click="$emit('topTabRightOnclick')">
                 <template v-if="rightPlus">
                     <Plus />
                 </template>
@@ -41,15 +28,15 @@
 </template>
 
 <script>
-import Plus from "@/components/svg/Plus.vue";
-import { computed, ref } from "vue";
+import Plus from '@/components/svg/Plus.vue'
+import { computed, ref } from 'vue'
 
 export default {
     props: {
         title: {
             type: String,
             default() {
-                return "Title";
+                return 'Title'
             },
         },
         leftText: {},
@@ -57,50 +44,50 @@ export default {
         rightPlus: {
             type: Boolean,
             default() {
-                return false;
+                return false
             },
         },
         isLeftTextHide: {
             type: Boolean,
             default() {
-                return false;
+                return false
             },
         },
         isTitleHide: {
             type: Boolean,
             default() {
-                return true;
+                return true
             },
         },
     },
 
-    emits: ["topTabRightOnclick", "topTabLeftOnclick"],
+    emits: ['topTabRightOnclick', 'topTabLeftOnclick'],
 
     components: {
         Plus,
     },
 
     setup(props) {
-        const topTab = ref(null);
+        const topTab = ref(null)
 
         const titleClass = computed(function () {
-            return props.isTitleHide ? ["opacity-0"] : ["opacity-100"];
-        });
+            return props.isTitleHide ? ['opacity-0'] : ['opacity-100']
+        })
 
         const topTabClass = computed(function () {
-            return props.isTitleHide ? [] : ["border-b", "border-shark-500"];
-        });
+            return props.isTitleHide ? [] : ['border-b', 'border-shark-500']
+        })
 
         const leftTextClass = computed(function () {
-            return props.isLeftTextHide ? ["opacity-0"] : [];
-        });
+            return props.isLeftTextHide ? ['opacity-0'] : []
+        })
 
         return {
             titleClass,
             topTabClass,
             leftTextClass,
             topTab,
-        };
+        }
     },
-};
+}
 </script>

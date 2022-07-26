@@ -18,13 +18,7 @@
                             </div>
                             <div class="col">
                                 <button
-                                    class="
-                                        flex
-                                        items-center
-                                        w-full
-                                        h-full
-                                        text-orange-peel-500
-                                    "
+                                    class="flex items-center w-full h-full text-orange-peel-500"
                                     @click="$emit('closeHandler')"
                                 >
                                     Cancel
@@ -37,10 +31,7 @@
         </template>
         <template #main>
             <ul>
-                <template
-                    v-for="(timezone, index) in timeZoneList"
-                    :key="`timezone-${index}`"
-                >
+                <template v-for="(timezone, index) in timeZoneList" :key="`timezone-${index}`">
                     <li
                         v-if="isNotRepeated(timeZoneList, index)"
                         class="sticky top-0 bg-dove-gray-900 py-1"
@@ -53,18 +44,9 @@
                         <div class="container">
                             <!-- 換字母的第一個要取消 border-t -->
                             <button
-                                class="
-                                    border-dove-gray-800
-                                    py-3
-                                    block
-                                    w-full
-                                    text-left
-                                "
+                                class="border-dove-gray-800 py-3 block w-full text-left"
                                 :class="{
-                                    'border-t': !isNotRepeated(
-                                        timeZoneList,
-                                        index
-                                    ),
+                                    'border-t': !isNotRepeated(timeZoneList, index),
                                 }"
                                 @click="$emit('addToUserList', timezone)"
                             >
@@ -79,11 +61,11 @@
 </template>
 
 <script>
-import BottomDrawer from "@/components/clock/BottomDrawer.vue";
-import InputText from "@/components/elements/InputText.vue";
-import Timezone from "@/hook/timezone.js";
-import DealData from "@/hook/dealData.js";
-import { ref, computed } from "vue";
+import BottomDrawer from '@/components/clock/BottomDrawer.vue'
+import InputText from '@/components/elements/InputText.vue'
+import Timezone from '@/hook/timezone.js'
+import DealData from '@/hook/dealData.js'
+import { ref, computed } from 'vue'
 
 export default {
     components: {
@@ -94,36 +76,36 @@ export default {
         isShow: {
             type: Boolean,
             default() {
-                return false;
+                return false
             },
         },
     },
-    emits: ["closeHandler", "addToUserList"],
+    emits: ['closeHandler', 'addToUserList'],
     setup(props) {
-        const searchInput = ref("");
+        const searchInput = ref('')
         const timeZoneList = computed(() => {
             return props.isShow
                 ? DealData.filterMatchedItems(
                       Timezone.getSortedTimezoneByName(),
                       searchInput.value,
-                      ["name"]
+                      ['name']
                   )
-                : [];
-        });
+                : []
+        })
 
         function isNotRepeated(WholeList, index) {
-            if (index === 0) return true;
+            if (index === 0) return true
             return (
                 WholeList[index - 1].name[0].toUpperCase() !==
                 WholeList[index].name[0].toUpperCase()
-            );
+            )
         }
 
         return {
             timeZoneList,
             isNotRepeated,
             searchInput,
-        };
+        }
     },
-};
+}
 </script>

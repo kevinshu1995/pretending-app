@@ -2,17 +2,7 @@
     <label class="relative overflow-hidden">
         <input
             :type="type"
-            class="
-                relative
-                z-10
-                w-full
-                pl-8
-                py-1
-                bg-dove-gray-800
-                caret-orange-peel-500
-                outline-none
-                rounded-lg
-            "
+            class="relative z-10 w-full pl-8 py-1 bg-dove-gray-800 caret-orange-peel-500 outline-none rounded-lg"
             :value="input"
             @input="$emit('update:input', $event.target.value)"
             :placeholder="placeholder"
@@ -27,8 +17,8 @@
 </template>
 
 <script>
-import Search from "@/components/svg/Search.vue";
-import { ref } from "vue";
+import Search from '@/components/svg/Search.vue'
+import { ref } from 'vue'
 export default {
     props: {
         type: {},
@@ -38,7 +28,7 @@ export default {
     components: {
         Search,
     },
-    emits: ["update:input"],
+    emits: ['update:input'],
     setup() {},
-};
+}
 </script>
