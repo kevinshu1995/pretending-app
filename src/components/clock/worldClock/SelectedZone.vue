@@ -69,7 +69,7 @@
 import MinusCircleSolid from '@/components/svg/Minus-circle-solid.vue'
 import Menu from '@/components/svg/Menu.vue'
 import { computed, ref } from 'vue'
-import TIME from '@/hook/time.js'
+import TIME from '@/js/hooks/useTime.js'
 import * as R from 'ramda'
 
 export default {

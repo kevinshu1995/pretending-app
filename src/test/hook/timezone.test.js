@@ -1,4 +1,4 @@
-import { matchName_without_GMT, filtered_slash } from '@/hook/timezone.js'
+import { matchName_without_GMT, filtered_slash } from '@/js/utils/timezone.js'
 import { expect, test } from '@jest/globals'
 
 test('GMT matching!', () => {

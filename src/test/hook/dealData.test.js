@@ -1,4 +1,4 @@
-import { arraySortByKey, findKeyByValue } from '@/hook/dealData.js'
+import { arraySortByKey, findKeyByValue } from '@/js/utils/dealData.js'
 import { expect, test } from '@jest/globals'
 
 test('Sort array by name!', () => {

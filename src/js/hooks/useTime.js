@@ -1,5 +1,5 @@
 import * as R from 'ramda'
-import DealData from './dealData'
+import DealData from '@/js/utils/dealData'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 

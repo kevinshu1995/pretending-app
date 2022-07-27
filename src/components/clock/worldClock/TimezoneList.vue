@@ -63,8 +63,8 @@
 <script>
 import BottomDrawer from '@/components/clock/BottomDrawer.vue'
 import InputText from '@/components/elements/InputText.vue'
-import Timezone from '@/hook/timezone.js'
-import DealData from '@/hook/dealData.js'
+import Timezone from '@/js/utils/timezone.js'
+import DealData from '@/js/utils/dealData.js'
 import { ref, computed } from 'vue'
 
 export default {
