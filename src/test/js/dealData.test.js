@@ -1,4 +1,4 @@
-import { arraySortByKey, findKeyByValue } from '@/js/utils/dealData.js'
+import dealData from '@/js/utils/dealData.js'
 import { expect, test } from '@jest/globals'
 
 test('Sort array by name!', () => {
@@ -18,7 +18,7 @@ test('Sort array by name!', () => {
             name: 'John',
         },
     ]
-    expect(arraySortByKey(arrayInput, 'name')).toMatchObject(expectReturn)
+    expect(dealData.arraySortByKey(arrayInput, 'name')).toMatchObject(expectReturn)
 })
 
 test('Find object by specific key!', () => {
@@ -36,5 +36,5 @@ test('Find object by specific key!', () => {
     const expectReturn = {
         zoneAbbr: 'CAST',
     }
-    expect(findKeyByValue(arrayInput, 'zoneAbbr', 'CAST')).toMatchObject(expectReturn)
+    expect(dealData.findKeyByValue(arrayInput, 'zoneAbbr', 'CAST')).toMatchObject(expectReturn)
 })
