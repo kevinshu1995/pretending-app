@@ -1,7 +1,7 @@
 <template>
     <nav class="w-full">
         <div
-            class="flex justify-between bg-shark-900 bg-opacity-70 backdrop-blur-lg border-t border-shark-500 pt-1 sm:pt-2 pb-1"
+            class="flex justify-between bg-shark-900/70 backdrop-blur-lg border-t border-shark-500 pt-1 sm:pt-2 pb-1"
         >
             <div
                 v-for="link in navigationLinks"

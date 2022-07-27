@@ -4,7 +4,7 @@
     >
         <div class="w-full h-full max-w-xl">
             <div class="w-full h-full bg-black relative flex flex-col">
-                <div class="flex-grow overflow-auto">
+                <div class="grow overflow-auto">
                     <router-view />
                 </div>
                 <BottomNavigation />

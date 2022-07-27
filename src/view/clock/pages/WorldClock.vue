@@ -8,7 +8,7 @@
             @topTabRightOnclick="toggleTimezoneList"
             @topTabLeftOnclick="toggleEditMode"
         />
-        <div class="container flex-grow flex flex-col">
+        <div class="container grow flex flex-col">
             <HeadTitle title="World Clock" />
             <SelectedZone
                 :is-edit="isEdit"

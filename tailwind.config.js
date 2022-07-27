@@ -1,8 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
-    mode: 'jit',
-    purge: ['index.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
-    darkMode: false, // or 'media' or 'class'
+    content: ['index.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
     theme: {
         screens: {
             xs: '475px',
@@ -115,9 +113,6 @@ module.exports = {
                 'fade-Out': 'fade .3s reverse',
             },
         },
-    },
-    variants: {
-        extend: {},
     },
     plugins: [],
 }

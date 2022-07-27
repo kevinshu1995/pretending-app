@@ -1,12 +1,12 @@
 <template>
-    <div class="flex-grow flex">
+    <div class="grow flex">
         <template v-if="formatZoneList.length === 0 || isLoading">
-            <div class="flex-grow self-center">
+            <div class="grow self-center">
                 <h2 class="text-dove-gray-500 text-center text-2xl">No World Clocks</h2>
             </div>
         </template>
         <template v-else>
-            <ul class="flex-grow flex flex-col">
+            <ul class="grow flex flex-col">
                 <transition-group
                     v-for="(zone, index) in formatZoneList"
                     :key="`zone-${index}`"
@@ -22,7 +22,7 @@
                     >
                         <MinusCircleSolid />
                     </div>
-                    <div :key="`area-${index}`" class="flex-grow flex flex-col justify-center py-1">
+                    <div :key="`area-${index}`" class="grow flex flex-col justify-center py-1">
                         <div class="flex space-x-1 text-sm font-light text-dove-gray-500">
                             <p class="">{{ zone.relative.day }},</p>
                             <p class="flex items-center">

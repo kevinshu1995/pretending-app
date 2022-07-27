@@ -9,7 +9,7 @@
                     </div>
                     <div class="col w-full">
                         <div class="row py-1">
-                            <div class="col flex-grow">
+                            <div class="col grow">
                                 <InputText
                                     :type="'search'"
                                     :placeholder="'Search'"

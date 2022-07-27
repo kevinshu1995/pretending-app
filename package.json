@@ -12,7 +12,7 @@
         "axios": "^0.21.1",
         "ramda": "^0.27.1",
         "timezones.json": "^1.5.2",
-        "vitawind": "^1.2.4",
+        "vitawind": "^2.0.0",
         "vue": "^3.0.5",
         "vue-router": "^4.0.10",
         "vuex": "^4.0.2"
