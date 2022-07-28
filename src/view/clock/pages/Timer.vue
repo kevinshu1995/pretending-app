@@ -1,9 +1,10 @@
 <template>
-    <div class="relative flex min-h-full flex-col">Timer</div>
+    <div class="relative flex min-h-full flex-col">
+        Timer
+        <RoundBtn />
+    </div>
 </template>
 
-<script>
-export default {
-    name: 'Timer',
-}
+<script setup>
+import RoundBtn from '@/components/elements/RoundBtn.vue'
 </script>
