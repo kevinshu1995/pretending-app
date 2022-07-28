@@ -13,24 +13,17 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import BottomNavigation from '@/components/clock/BottomNavigation.vue'
 import { useStore } from 'vuex'
-export default {
-    name: 'ClockIndex',
-    components: {
-        BottomNavigation,
-    },
-    setup() {
-        const store = useStore()
-        updateTime()
 
-        function updateTime() {
-            setInterval(() => {
-                store.dispatch('setCurrentTime')
-            }, 500)
-        }
-    },
+const store = useStore()
+updateTime()
+
+function updateTime() {
+    setInterval(() => {
+        store.dispatch('setCurrentTime')
+    }, 500)
 }
 </script>
 

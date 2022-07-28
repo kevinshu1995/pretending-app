@@ -26,54 +26,41 @@
     </nav>
 </template>
 
-<script>
+<script setup>
 import WorldClock from '@/components/svg/WorldClock.vue'
 import Alarm from '@/components/svg/Alarm.vue'
 import Stopwatch from '@/components/svg/Stopwatch.vue'
 import Timer from '@/components/svg/Timer.vue'
 import { markRaw } from 'vue'
 
-export default {
-    components: {
-        WorldClock,
-        Alarm,
-        Stopwatch,
-        Timer,
+const navigationLinks = markRaw([
+    {
+        name: 'World Clock',
+        icon: WorldClock,
+        href: {
+            name: 'WorldClock',
+        },
     },
-    setup() {
-        const navigationLinks = markRaw([
-            {
-                name: 'World Clock',
-                icon: WorldClock,
-                href: {
-                    name: 'WorldClock',
-                },
-            },
-            {
-                name: 'Alarm',
-                icon: Alarm,
-                href: {
-                    name: 'Alarm',
-                },
-            },
-            {
-                name: 'Stopwatch',
-                icon: Stopwatch,
-                href: {
-                    name: 'Stopwatch',
-                },
-            },
-            {
-                name: 'Timer',
-                icon: Timer,
-                href: {
-                    name: 'Timer',
-                },
-            },
-        ])
-        return {
-            navigationLinks,
-        }
+    {
+        name: 'Alarm',
+        icon: Alarm,
+        href: {
+            name: 'Alarm',
+        },
     },
-}
+    {
+        name: 'Stopwatch',
+        icon: Stopwatch,
+        href: {
+            name: 'Stopwatch',
+        },
+    },
+    {
+        name: 'Timer',
+        icon: Timer,
+        href: {
+            name: 'Timer',
+        },
+    },
+])
 </script>

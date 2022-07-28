@@ -19,16 +19,8 @@
     </transition>
 </template>
 
-<script>
-export default {
-    props: {
-        isShow: {
-            type: Boolean,
-            default() {
-                return true
-            },
-        },
-    },
-    setup(props) {},
-}
+<script setup>
+const { isShow } = defineProps({
+    isShow: Boolean,
+})
 </script>

@@ -60,52 +60,35 @@
     </BottomDrawer>
 </template>
 
-<script>
+<script setup>
 import BottomDrawer from '@/components/clock/BottomDrawer.vue'
 import InputText from '@/components/elements/InputText.vue'
 import Timezone from '@/js/utils/timezone.js'
 import DealData from '@/js/utils/dealData.js'
 import { ref, computed } from 'vue'
 
-export default {
-    components: {
-        BottomDrawer,
-        InputText,
-    },
-    props: {
-        isShow: {
-            type: Boolean,
-            default() {
-                return false
-            },
+const { isShow } = defineProps({
+    isShow: {
+        type: Boolean,
+        default() {
+            return false
         },
     },
-    emits: ['closeHandler', 'addToUserList'],
-    setup(props) {
-        const searchInput = ref('')
-        const timeZoneList = computed(() => {
-            return props.isShow
-                ? DealData.filterMatchedItems(
-                      Timezone.getSortedTimezoneByName(),
-                      searchInput.value,
-                      ['name']
-                  )
-                : []
-        })
+})
 
-        function isNotRepeated(WholeList, index) {
-            if (index === 0) return true
-            return (
-                WholeList[index - 1].name[0].toUpperCase() !==
-                WholeList[index].name[0].toUpperCase()
-            )
-        }
+const { closeHandler, addToUserList } = defineEmits(['closeHandler', 'addToUserList'])
 
-        return {
-            timeZoneList,
-            isNotRepeated,
-            searchInput,
-        }
-    },
+const searchInput = ref('')
+const timeZoneList = computed(() => {
+    return isShow
+        ? DealData.filterMatchedItems(Timezone.getSortedTimezoneByName(), searchInput.value, [
+              'name',
+          ])
+        : []
+})
+
+function isNotRepeated(WholeList, index) {
+    if (index === 0) return true
+    return WholeList[index - 1].name[0].toUpperCase() !== WholeList[index].name[0].toUpperCase()
 }
 </script>

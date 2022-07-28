@@ -65,63 +65,51 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import MinusCircleSolid from '@/components/svg/Minus-circle-solid.vue'
 import Menu from '@/components/svg/Menu.vue'
 import { computed, ref } from 'vue'
 import TIME from '@/js/hooks/useTime.js'
 import * as R from 'ramda'
 
-export default {
-    name: 'SelectedZone',
-    props: {
-        isEdit: {
-            type: Boolean,
-            default() {
-                return false
-            },
-        },
-        // * 傳進來的 zones
-        selectedZones: {
-            type: Array,
-            default() {
-                return []
-            },
+const { isEdit, selectedZones } = defineProps({
+    isEdit: {
+        type: Boolean,
+        default() {
+            return false
         },
     },
-    components: {
-        MinusCircleSolid,
-        Menu,
+    // * 傳進來的 zones
+    selectedZones: {
+        type: Array,
+        default() {
+            return []
+        },
     },
-    emits: ['onDelete'],
-    setup(props) {
-        const Time = TIME()
-        const isLoading = ref(false)
+})
 
-        const formatZoneList = computed(() => {
-            const curryZoneFormat = R.curry(zoneFormat)
-            return R.map(curryZoneFormat, props.selectedZones)
-        })
+const { onDelete } = defineEmits(['onDelete'])
 
-        function zoneFormat(zone) {
-            const time = Time.getTargetOffsetTime(zone.zone.offset)
-            const relative = Time.relativeWithLocal(zone.zone.offset)
-            return {
-                zoneName: zone.name,
-                time: `${time.hour}:${time.minute}`,
-                relative: {
-                    day: relative.day,
-                    hour: relative.hour,
-                },
-                zoneData: zone,
-            }
-        }
+const Time = TIME()
+const isLoading = ref(false)
 
-        return {
-            formatZoneList,
-            isLoading,
-        }
-    },
+const formatZoneList = computed(() => {
+    const curryZoneFormat = R.curry(zoneFormat)
+    return R.map(curryZoneFormat, selectedZones)
+})
+
+function zoneFormat(zone) {
+    const time = Time.getTargetOffsetTime(zone.zone.offset)
+    const relative = Time.relativeWithLocal(zone.zone.offset)
+    return {
+        zoneName: zone.name,
+        time: `${time.hour}:${time.minute}`,
+        relative: {
+            day: relative.day,
+            hour: relative.hour,
+        },
+        zoneData: zone,
+    }
 }
 </script>
 

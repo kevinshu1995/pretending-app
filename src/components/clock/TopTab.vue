@@ -27,67 +27,55 @@
     </nav>
 </template>
 
-<script>
+<script setup>
 import Plus from '@/components/svg/Plus.vue'
 import { computed, ref } from 'vue'
 
-export default {
-    props: {
-        title: {
-            type: String,
-            default() {
-                return 'Title'
-            },
-        },
-        leftText: {},
-        rightText: {},
-        rightPlus: {
-            type: Boolean,
-            default() {
-                return false
-            },
-        },
-        isLeftTextHide: {
-            type: Boolean,
-            default() {
-                return false
-            },
-        },
-        isTitleHide: {
-            type: Boolean,
-            default() {
-                return true
-            },
+const { title, leftText, rightText, rightPlus, isLeftTextHide, isTitleHide } = defineProps({
+    title: {
+        type: String,
+        default() {
+            return 'Title'
         },
     },
-
-    emits: ['topTabRightOnclick', 'topTabLeftOnclick'],
-
-    components: {
-        Plus,
+    leftText: {},
+    rightText: {},
+    rightPlus: {
+        type: Boolean,
+        default() {
+            return false
+        },
     },
-
-    setup(props) {
-        const topTab = ref(null)
-
-        const titleClass = computed(function () {
-            return props.isTitleHide ? ['opacity-0'] : ['opacity-100']
-        })
-
-        const topTabClass = computed(function () {
-            return props.isTitleHide ? [] : ['border-b', 'border-shark-500']
-        })
-
-        const leftTextClass = computed(function () {
-            return props.isLeftTextHide ? ['opacity-0'] : []
-        })
-
-        return {
-            titleClass,
-            topTabClass,
-            leftTextClass,
-            topTab,
-        }
+    isLeftTextHide: {
+        type: Boolean,
+        default() {
+            return false
+        },
     },
-}
+    isTitleHide: {
+        type: Boolean,
+        default() {
+            return true
+        },
+    },
+})
+
+const { topTabLeftOnclick, topTabRightOnclick } = defineEmits([
+    'topTabLeftOnclick',
+    'topTabRightOnclick',
+])
+
+const topTab = ref(null)
+
+const titleClass = computed(function () {
+    return isTitleHide ? ['opacity-0'] : ['opacity-100']
+})
+
+const topTabClass = computed(function () {
+    return isTitleHide ? [] : ['border-b', 'border-shark-500']
+})
+
+const leftTextClass = computed(function () {
+    return isLeftTextHide ? ['opacity-0'] : []
+})
 </script>

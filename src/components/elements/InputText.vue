@@ -4,7 +4,7 @@
             :type="type"
             class="relative z-10 w-full pl-8 py-1 bg-dove-gray-800 caret-orange-peel-500 outline-none rounded-lg"
             :value="input"
-            @input="$emit('update:input', $event.target.value)"
+            @input="emits('update:input', $event.target.value)"
             :placeholder="placeholder"
         />
         <div
@@ -16,19 +16,30 @@
     </label>
 </template>
 
-<script>
+<script setup>
 import Search from '@/components/svg/Search.vue'
 import { ref } from 'vue'
-export default {
-    props: {
-        type: {},
-        placeholder: {},
-        input: {},
+
+const { type, placeholder, input } = defineProps({
+    type: {
+        type: String,
+        default() {
+            return 'text'
+        },
     },
-    components: {
-        Search,
+    placeholder: {
+        type: String,
+        default() {
+            return 'Search'
+        },
     },
-    emits: ['update:input'],
-    setup() {},
-}
+    input: {
+        type: String,
+        default() {
+            return ''
+        },
+    },
+})
+
+const emits = defineEmits(['update:input'])
 </script>
