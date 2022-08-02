@@ -16,3 +16,9 @@
         @apply px-3;
     }
 }
+
+@layer utilities {
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+}
