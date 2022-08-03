@@ -1,23 +1,28 @@
 <template>
     <div
-        class="scrollbar-none inline-flex h-48 snap-y flex-col gap-1 overflow-scroll"
-        ref="dom_reel"
+        v-bind="{ ...containerProps, onScroll }"
+        class="scrollbar-none inline-block h-48 overflow-auto scroll-smooth"
     >
-        <div
-            v-for="{ text } in reelChildInfo"
-            :key="text"
-            class="snap-center self-center justify-self-center px-6"
-        >
-            <span>
-                {{ text }}
-            </span>
+        <div v-bind="wrapperProps">
+            <div
+                v-for="{ data } in list"
+                :key="data.text"
+                class="rotate-3d-x self-center justify-self-center px-6 py-2"
+                :style="`--deg: ${data.deg}`"
+            >
+                <span :class="[(data.text < min || data.text > max) && 'opacity-0']">
+                    {{ data.text }}
+                </span>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, ref, reactive } from 'vue'
-const { min, max, padStart } = defineProps({
+import { useVirtualList, useElementBounding } from '@vueuse/core'
+import { nextTick, onMounted, reactive, computed } from 'vue'
+
+const { min, max, padStart, value } = defineProps({
     min: {
         type: Number,
         default: 0,
@@ -28,48 +33,86 @@ const { min, max, padStart } = defineProps({
     },
     padStart: {
         type: Number,
-        default: 0,
+        default: 2,
+    },
+    value: {
+        type: Number,
+        default: 3,
     },
 })
 
-const dom_reel = ref(null)
+const reel = reactive({
+    scrollTop: null,
+    bounding: null,
+    // this is set manually
+    itemHeight: 40,
+    // this is set manually
+    fillerNums: 2,
+})
 
-const reelChildInfo = ref(
-    Array(max - min + 1)
-        .fill(0)
-        .map((_, i) => {
-            return {
-                text: (i + min).toString().padStart(padStart, '0'),
-            }
-        })
-)
+const reelChildAry = Array.from(Array(max - min + 1 + reel.fillerNums * 2).keys())
 
-const initReelChildInfo = () => {
-    reelChildInfo.value = reelChildInfo.value.map((item, i) => {
+const reelChildInfo = computed(() => {
+    return reelChildAry.map((index) => {
         return {
-            ...item,
-            ...getReelChildOffset(i),
+            index: index - reel.fillerNums,
+            scrollToIndex: index,
+            text: (index + min - reel.fillerNums).toString().padStart(padStart, '0'),
+            deg: calculateDeg(index),
         }
     })
+})
+
+const calculateDeg = (index) => {
+    const { scrollTop, itemHeight } = reel
+    if (scrollTop === null) {
+        return '0deg'
+    }
+    const { height } = reel.bounding
+    const elementCenter = (index + 1) * itemHeight - itemHeight / 2
+    const viewCenter = scrollTop + height / 2
+    const offset = viewCenter - elementCenter
+    if (Math.abs(offset) > height / 2) {
+        return '90deg'
+    }
+    return (offset / (height / 2)) * 90 + 'deg'
 }
 
-const getReelChildOffset = (index) => {
-    if (dom_reel === null) return {}
-    const reelDom = dom_reel.value
-    const { top: reelTop } = reelDom.getBoundingClientRect()
-    const { top: reelChildTop, height: childrenHeight } =
-        reelDom.children[index].getBoundingClientRect()
-    const reelChildOffsetTop = reelChildTop - reelTop
-    return {
-        top: reelChildOffsetTop,
-        center: reelChildOffsetTop + childrenHeight / 2,
-        bottom: reelChildOffsetTop - childrenHeight / 2,
+const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(reelChildInfo, {
+    itemHeight: reel.itemHeight,
+})
+
+const currentReel = computed(() => {
+    const { scrollTop, itemHeight } = reel
+    if (scrollTop === null) {
+        return null
+    }
+    const index = Math.floor(scrollTop / itemHeight) + reel.fillerNums
+    return reelChildInfo.value[index]
+})
+
+const onScroll = () => {
+    // * fire original scrollTop
+    containerProps.onScroll()
+    if (containerProps.ref) {
+        reel.scrollTop = containerProps.ref.value.scrollTop
+        setTimeout(() => {
+            requestAnimationFrame(() => {
+                scrollTo(Math.floor(reel.scrollTop / reel.itemHeight))
+            })
+        }, 300)
     }
 }
 
 onMounted(async () => {
+    reel.bounding = useElementBounding(containerProps.ref)
     await nextTick()
-    initReelChildInfo()
+    setTimeout(() => {
+        const current = reelChildInfo.value.find((item) => Number(item.text) === value)
+        if (current) {
+            scrollTo(current.scrollToIndex)
+        }
+    }, 0)
 })
 </script>
 
