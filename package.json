@@ -13,6 +13,7 @@
         "test": "jest"
     },
     "dependencies": {
+        "@vueuse/core": "^9.0.2",
         "axios": "^0.21.1",
         "ramda": "^0.27.1",
         "timezones.json": "^1.5.2",
