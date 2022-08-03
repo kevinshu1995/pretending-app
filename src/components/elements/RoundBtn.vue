@@ -2,7 +2,7 @@
     <button
         @click="emits('onClick')"
         :class="[
-            'w-16 h-16 rounded-full transition text-sm',
+            'h-16 w-16 rounded-full text-sm transition',
             'ring-2 ring-offset-2 ring-offset-black',
             'active:bg-opacity-30 active:ring-opacity-30',
             ...btnStyle,

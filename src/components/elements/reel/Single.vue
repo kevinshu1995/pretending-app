@@ -1,12 +1,12 @@
 <template>
     <div
-        class="inline-flex flex-col h-48 overflow-scroll snap-y gap-1 scrollbar-none"
+        class="scrollbar-none inline-flex h-48 snap-y flex-col gap-1 overflow-scroll"
         ref="dom_reel"
     >
         <div
             v-for="{ text } in reelChildInfo"
             :key="text"
-            class="justify-self-center self-center px-6 snap-center"
+            class="snap-center self-center justify-self-center px-6"
         >
             <span>
                 {{ text }}
