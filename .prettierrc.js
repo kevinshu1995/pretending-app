@@ -13,4 +13,5 @@ module.exports = {
     htmlWhitespaceSensitivity: 'css',
     endOfLine: 'lf',
     singleAttributePerLine: false,
+    tailwindConfig: './tailwind.config.js',
 }
