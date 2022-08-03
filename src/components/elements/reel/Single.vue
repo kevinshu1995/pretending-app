@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { useVirtualList, useElementBounding } from '@vueuse/core'
+import { useVirtualList, useElementBounding, useDebounceFn } from '@vueuse/core'
 import { nextTick, onMounted, reactive, computed } from 'vue'
 
 const { min, max, padStart, value } = defineProps({
@@ -41,13 +41,15 @@ const { min, max, padStart, value } = defineProps({
     },
 })
 
+const emits = defineEmits(['update:value'])
+
 const reel = reactive({
     scrollTop: null,
     bounding: null,
     // this is set manually
     itemHeight: 40,
     // this is set manually
-    fillerNums: 2,
+    fillerNums: 4,
 })
 
 const reelChildAry = Array.from(Array(max - min + 1 + reel.fillerNums * 2).keys())
@@ -55,52 +57,74 @@ const reelChildAry = Array.from(Array(max - min + 1 + reel.fillerNums * 2).keys(
 const reelChildInfo = computed(() => {
     return reelChildAry.map((index) => {
         return {
+            // might start from negative value
             index: index - reel.fillerNums,
+            // for scroll to (real index)
             scrollToIndex: index,
+            value: index + min - reel.fillerNums,
             text: (index + min - reel.fillerNums).toString().padStart(padStart, '0'),
             deg: calculateDeg(index),
         }
     })
 })
 
+const currentActiveReel = computed({
+    get() {
+        const { scrollTop, itemHeight } = reel
+        if (scrollTop === null) {
+            return null
+        }
+        const index = Math.floor(scrollTop / itemHeight) + reel.fillerNums
+        return reelChildInfo.value[index]
+    },
+    set(currentValue) {
+        emits('update:value', currentValue.value || value)
+    },
+})
+
 const calculateDeg = (index) => {
+    const disappear = '90deg'
+    const visible = '0deg'
     const { scrollTop, itemHeight } = reel
+    // if scrollTop is null, it means the component is not mounted yet
     if (scrollTop === null) {
-        return '0deg'
+        return visible
     }
     const { height } = reel.bounding
-    const elementCenter = (index + 1) * itemHeight - itemHeight / 2
     const viewCenter = scrollTop + height / 2
-    const offset = viewCenter - elementCenter
-    if (Math.abs(offset) > height / 2) {
-        return '90deg'
+    const elementCenter = (index + 1) * itemHeight - itemHeight / 2
+    const elementOffset = viewCenter - elementCenter
+    // if element is out of viewport, return disappear
+    if (Math.abs(elementOffset) > height / 2) {
+        return disappear
     }
-    return (offset / (height / 2)) * 90 + 'deg'
+    return (elementOffset / (height / 2)) * 90 + 'deg'
 }
 
 const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(reelChildInfo, {
     itemHeight: reel.itemHeight,
 })
 
-const currentReel = computed(() => {
-    const { scrollTop, itemHeight } = reel
-    if (scrollTop === null) {
-        return null
-    }
-    const index = Math.floor(scrollTop / itemHeight) + reel.fillerNums
-    return reelChildInfo.value[index]
-})
+const customScrollTo = (index) => {
+    // !FIXME
+    const minIndex = reel.fillerNums
+    const maxIndex = max - 1
+    const availableIndex = Math.max(Math.min(index, maxIndex), minIndex)
+    scrollTo(availableIndex)
+}
+
+const debouncedOnScrollSideEffect = useDebounceFn(() => {
+    customScrollTo(Math.floor(reel.scrollTop / reel.itemHeight))
+}, 100)
 
 const onScroll = () => {
     // * fire original scrollTop
     containerProps.onScroll()
     if (containerProps.ref) {
-        reel.scrollTop = containerProps.ref.value.scrollTop
-        setTimeout(() => {
-            requestAnimationFrame(() => {
-                scrollTo(Math.floor(reel.scrollTop / reel.itemHeight))
-            })
-        }, 300)
+        requestAnimationFrame(() => {
+            reel.scrollTop = containerProps.ref.value.scrollTop
+            debouncedOnScrollSideEffect()
+        })
     }
 }
 
@@ -110,7 +134,7 @@ onMounted(async () => {
     setTimeout(() => {
         const current = reelChildInfo.value.find((item) => Number(item.text) === value)
         if (current) {
-            scrollTo(current.scrollToIndex)
+            customScrollTo(current.scrollToIndex)
         }
     }, 0)
 })
