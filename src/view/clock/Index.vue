@@ -1,9 +1,9 @@
 <template>
     <div
-        class="w-full h-full max-h-screen flex justify-center items-center md:p-3 bg-gray-900 select-none"
+        class="flex h-full max-h-screen w-full select-none items-center justify-center bg-gray-900 md:p-3"
     >
-        <div class="w-full h-full max-w-xl">
-            <div class="w-full h-full bg-black relative flex flex-col">
+        <div class="h-full w-full max-w-xl">
+            <div class="relative flex h-full w-full flex-col bg-black">
                 <div class="grow overflow-auto">
                     <router-view />
                 </div>

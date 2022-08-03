@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-full flex flex-col relative">
+    <div class="relative flex min-h-full flex-col">
         <TopTab right-plus left-text="Edit" title="Alarm" :is-title-hide="false" />
         Alarm
     </div>

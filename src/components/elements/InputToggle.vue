@@ -1,15 +1,15 @@
 <template>
-    <div :id="toggle.id.toggle" class="inline-block w-8 h-5">
-        <label class="w-full h-full relative inline-block">
+    <div :id="toggle.id.toggle" class="inline-block h-5 w-8">
+        <label class="relative inline-block h-full w-full">
             <input
                 :id="toggle.id.checkbox"
                 type="checkbox"
                 v-model="toggle.value"
                 @change="toggleOnChange"
-                class="peer appearance-none absolute w-5 h-full bg-white rounded-full transition-all translate-x-0 border border-white checked:translate-x-3 checked:border-malachite-500 z-10"
+                class="peer absolute z-10 h-full w-5 translate-x-0 appearance-none rounded-full border border-white bg-white transition-all checked:translate-x-3 checked:border-malachite-500"
             />
             <div
-                class="absolute top-0 w-8 h-full bg-gray-300 peer-checked:bg-malachite-500 rounded-full block transition-all"
+                class="absolute top-0 block h-full w-8 rounded-full bg-gray-300 transition-all peer-checked:bg-malachite-500"
             />
         </label>
     </div>

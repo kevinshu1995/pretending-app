@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-full flex flex-col relative">Stopwatch</div>
+    <div class="relative flex min-h-full flex-col">Stopwatch</div>
 </template>
 
 <script>

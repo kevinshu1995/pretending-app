@@ -4,14 +4,14 @@
         leave-active-class="animate-slide-DownOut bg-transparent"
     >
         <div
-            class="fixed z-40 left-0 right-0 top-0 max-w-xl mx-auto md:pb-3 pt-10 h-full w-full bg-gray-900/70"
+            class="fixed left-0 right-0 top-0 z-40 mx-auto h-full w-full max-w-xl bg-gray-900/70 pt-10 md:pb-3"
             v-if="isShow"
         >
-            <div class="h-full relative overflow-hidden flex flex-col bg-black rounded-t-lg">
-                <div class="bg-shark-500 w-full sticky left-0 top-0 backdrop-blur">
+            <div class="relative flex h-full flex-col overflow-hidden rounded-t-lg bg-black">
+                <div class="sticky left-0 top-0 w-full bg-shark-500 backdrop-blur">
                     <slot name="header"></slot>
                 </div>
-                <div class="grow overflow-y-auto w-full">
+                <div class="w-full grow overflow-y-auto">
                     <slot name="main"></slot>
                 </div>
             </div>

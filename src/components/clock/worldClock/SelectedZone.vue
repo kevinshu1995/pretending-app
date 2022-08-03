@@ -1,28 +1,28 @@
 <template>
-    <div class="grow flex">
+    <div class="flex grow">
         <template v-if="formatZoneList.length === 0 || isLoading">
             <div class="grow self-center">
-                <h2 class="text-dove-gray-500 text-center text-2xl">No World Clocks</h2>
+                <h2 class="text-center text-2xl text-dove-gray-500">No World Clocks</h2>
             </div>
         </template>
         <template v-else>
-            <ul class="grow flex flex-col">
+            <ul class="flex grow flex-col">
                 <transition-group
                     v-for="(zone, index) in formatZoneList"
                     :key="`zone-${index}`"
                     tag="li"
                     name="list"
-                    class="flex items-center py-2.5 border-t last-of-type:border-b border-shark-500 -mr-4 overflow-x-hidden"
+                    class="-mr-4 flex items-center overflow-x-hidden border-t border-shark-500 py-2.5 last-of-type:border-b"
                 >
                     <div
                         :key="`list-delete-${index}`"
                         v-if="isEdit"
                         @click="$emit('onDelete', zone.zoneData.zoneAbbr)"
-                        class="inline-flex items-center h-full text-sunset-orange-500 cursor-pointer px-3"
+                        class="inline-flex h-full cursor-pointer items-center px-3 text-sunset-orange-500"
                     >
                         <MinusCircleSolid />
                     </div>
-                    <div :key="`area-${index}`" class="grow flex flex-col justify-center py-1">
+                    <div :key="`area-${index}`" class="flex grow flex-col justify-center py-1">
                         <div class="flex space-x-1 text-sm font-light text-dove-gray-500">
                             <p class="">{{ zone.relative.day }},</p>
                             <p class="flex items-center">
@@ -45,7 +45,7 @@
                         <template v-if="!isEdit">
                             <div
                                 :key="`selectedZone-time-${index}`"
-                                class="font-light text-5xl xs:text-6xl pr-4"
+                                class="pr-4 text-5xl font-light xs:text-6xl"
                             >
                                 {{ zone.time }}
                             </div>
@@ -53,7 +53,7 @@
                         <template v-else>
                             <div
                                 :key="`selectedZone-drag-${index}`"
-                                class="text-dove-gray-500 h-full flex items-center cursor-pointer pl-3 pr-4"
+                                class="flex h-full cursor-pointer items-center pl-3 pr-4 text-dove-gray-500"
                             >
                                 <Menu />
                             </div>

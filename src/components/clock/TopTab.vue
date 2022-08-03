@@ -1,7 +1,7 @@
 <template>
     <nav ref="topTab" class="sticky left-0 top-0 w-full">
         <div
-            class="flex text-base xs:text-lg font-bold backdrop-blur-lg bg-shark-900/70"
+            class="flex bg-shark-900/70 text-base font-bold backdrop-blur-lg xs:text-lg"
             :class="topTabClass"
         >
             <button
@@ -12,7 +12,7 @@
             >
                 {{ leftText }}
             </button>
-            <p class="grow font-black text-center py-2 transition-all" :class="titleClass">
+            <p class="grow py-2 text-center font-black transition-all" :class="titleClass">
                 {{ title }}
             </p>
             <button class="px-4 py-2 text-orange-peel-500" @click="$emit('topTabRightOnclick')">

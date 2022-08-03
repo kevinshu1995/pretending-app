@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-full flex flex-col relative">
+    <div class="relative flex min-h-full flex-col">
         <TopTab
             right-plus
             left-text="Edit"
@@ -8,7 +8,7 @@
             @topTabRightOnclick="toggleTimezoneList"
             @topTabLeftOnclick="toggleEditMode"
         />
-        <div class="container grow flex flex-col">
+        <div class="container flex grow flex-col">
             <HeadTitle title="World Clock" />
             <SelectedZone
                 :is-edit="isEdit"

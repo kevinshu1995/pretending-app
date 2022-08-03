@@ -18,7 +18,7 @@
                             </div>
                             <div class="col">
                                 <button
-                                    class="flex items-center w-full h-full text-orange-peel-500"
+                                    class="flex h-full w-full items-center text-orange-peel-500"
                                     @click="$emit('closeHandler')"
                                 >
                                     Cancel
@@ -44,7 +44,7 @@
                         <div class="container">
                             <!-- 換字母的第一個要取消 border-t -->
                             <button
-                                class="border-dove-gray-800 py-3 block w-full text-left"
+                                class="block w-full border-dove-gray-800 py-3 text-left"
                                 :class="{
                                     'border-t': !isNotRepeated(timeZoneList, index),
                                 }"
