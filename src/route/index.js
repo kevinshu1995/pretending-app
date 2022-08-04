@@ -13,8 +13,8 @@ const routes = [
         component: () => import('@/view/clock/Index.vue'),
         children: [
             {
-                path: '',
-                redirect: '/worldClock',
+                path: '/',
+                redirect: '/clock/worldClock',
             },
             {
                 path: '/worldClock',
