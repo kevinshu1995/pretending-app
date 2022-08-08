@@ -14,10 +14,11 @@
             >
                 <span
                     :class="[
-                        'rotate-3d-x inline-block',
+                        'rotate-3d-x inline-block cursor-pointer',
                         (data.text < props.min || data.text > props.max) && 'opacity-0',
                     ]"
                     :style="`--deg: ${data.deg}`"
+                    @click="customScrollTo(data.scrollToIndex)"
                 >
                     {{ data.text }}
                 </span>
