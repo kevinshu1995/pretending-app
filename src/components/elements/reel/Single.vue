@@ -7,7 +7,7 @@
             <div
                 v-for="{ data } in list"
                 :key="data.text"
-                class="flex items-center justify-center self-center justify-self-center px-6"
+                class="flex w-8 items-center justify-center self-center justify-self-center"
                 :style="{
                     height: `${reel.itemHeight}px`,
                 }"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { useVirtualList, useElementBounding, useDebounceFn } from '@vueuse/core'
+import { useVirtualList, useElementBounding, useDebounceFn, usePointerSwipe } from '@vueuse/core'
 import { nextTick, onMounted, reactive, computed, watchEffect } from 'vue'
 
 const props = defineProps({
@@ -119,14 +119,26 @@ const debouncedOnScrollSideEffect = useDebounceFn(() => {
 
 const onScroll = () => {
     // * fire original scrollTop
-    containerProps.onScroll()
     if (containerProps.ref) {
         requestAnimationFrame(() => {
+            containerProps.onScroll()
             reel.scrollTop = containerProps.ref.value.scrollTop
             debouncedOnScrollSideEffect()
         })
     }
 }
+
+// const { distanceY } = usePointerSwipe(containerProps.ref, {
+//     threshold: 1,
+//     async onSwipe(e) {
+//         if (containerProps.ref) {
+//             // FIXME 不滑順 QQ
+//             containerProps.ref.value.scrollTop += distanceY.value / 2
+//             reel.scrollTop += distanceY.value
+//             onScroll()
+//         }
+//     },
+// })
 
 const init = async () => {
     reel.bounding = useElementBounding(containerProps.ref)
