@@ -7,10 +7,18 @@
             <div
                 v-for="{ data } in list"
                 :key="data.text"
-                class="rotate-3d-x self-center justify-self-center px-6 py-2"
-                :style="`--deg: ${data.deg}`"
+                class="flex items-center justify-center self-center justify-self-center px-6"
+                :style="{
+                    height: `${reel.itemHeight}px`,
+                }"
             >
-                <span :class="[(data.text < min || data.text > max) && 'opacity-0']">
+                <span
+                    :class="[
+                        'rotate-3d-x inline-block',
+                        (data.text < props.min || data.text > props.max) && 'opacity-0',
+                    ]"
+                    :style="`--deg: ${data.deg}`"
+                >
                     {{ data.text }}
                 </span>
             </div>
@@ -20,9 +28,9 @@
 
 <script setup>
 import { useVirtualList, useElementBounding, useDebounceFn } from '@vueuse/core'
-import { nextTick, onMounted, reactive, computed } from 'vue'
+import { nextTick, onMounted, reactive, computed, watchEffect } from 'vue'
 
-const { min, max, padStart, value } = defineProps({
+const props = defineProps({
     min: {
         type: Number,
         default: 0,
@@ -47,12 +55,13 @@ const reel = reactive({
     scrollTop: null,
     bounding: null,
     // this is set manually
-    itemHeight: 40,
+    itemHeight: 27,
     // this is set manually
     fillerNums: 4,
+    centerDistance: 3,
 })
 
-const reelChildAry = Array.from(Array(max - min + 1 + reel.fillerNums * 2).keys())
+const reelChildAry = Array.from(Array(props.max - props.min + 1 + reel.fillerNums * 2).keys())
 
 const reelChildInfo = computed(() => {
     return reelChildAry.map((index) => {
@@ -61,25 +70,11 @@ const reelChildInfo = computed(() => {
             index: index - reel.fillerNums,
             // for scroll to (real index)
             scrollToIndex: index,
-            value: index + min - reel.fillerNums,
-            text: (index + min - reel.fillerNums).toString().padStart(padStart, '0'),
+            value: index + props.min - reel.fillerNums,
+            text: (index + props.min - reel.fillerNums).toString().padStart(props.padStart, '0'),
             deg: calculateDeg(index),
         }
     })
-})
-
-const currentActiveReel = computed({
-    get() {
-        const { scrollTop, itemHeight } = reel
-        if (scrollTop === null) {
-            return null
-        }
-        const index = Math.floor(scrollTop / itemHeight) + reel.fillerNums
-        return reelChildInfo.value[index]
-    },
-    set(currentValue) {
-        emits('update:value', currentValue.value || value)
-    },
 })
 
 const calculateDeg = (index) => {
@@ -105,17 +100,22 @@ const { list, containerProps, wrapperProps, scrollTo } = useVirtualList(reelChil
     itemHeight: reel.itemHeight,
 })
 
-const customScrollTo = (index) => {
-    // !FIXME
-    const minIndex = reel.fillerNums
-    const maxIndex = max - 1
-    const availableIndex = Math.max(Math.min(index, maxIndex), minIndex)
+//  isOffset
+//      -> true - place the scrollToIndex target in the center (useful for changing the value manually)
+//      -> false - place the scrollToIndex target at the top (only be fired by scrollTop changes)
+const customScrollTo = (scrollToIndex, isOffset = true) => {
+    const { fillerNums, centerDistance } = reel
+    const minIndex = fillerNums - centerDistance
+    const maxIndex = props.max + fillerNums - centerDistance
+    const targetIndex = scrollToIndex - (isOffset ? centerDistance : 0)
+    const availableIndex = Math.max(Math.min(targetIndex, maxIndex), minIndex)
     scrollTo(availableIndex)
 }
 
 const debouncedOnScrollSideEffect = useDebounceFn(() => {
-    customScrollTo(Math.floor(reel.scrollTop / reel.itemHeight))
-}, 100)
+    // Make sure the reel position is right on the center
+    customScrollTo(Math.round(reel.scrollTop / reel.itemHeight), false)
+}, 300)
 
 const onScroll = () => {
     // * fire original scrollTop
@@ -128,16 +128,33 @@ const onScroll = () => {
     }
 }
 
-onMounted(async () => {
+const init = async () => {
     reel.bounding = useElementBounding(containerProps.ref)
     await nextTick()
     setTimeout(() => {
-        const current = reelChildInfo.value.find((item) => Number(item.text) === value)
-        if (current) {
-            customScrollTo(current.scrollToIndex)
-        }
+        const defaultReel = reelChildInfo.value.find((item) => item.value === props.value)
+        if (defaultReel === undefined) return
+        customScrollTo(defaultReel.scrollToIndex)
     }, 0)
+}
+
+const currentActiveReel = computed(() => {
+    const { scrollTop, itemHeight, centerDistance } = reel
+    if (scrollTop === null) {
+        return null
+    }
+    const realIndex = Math.floor(scrollTop / itemHeight) + centerDistance
+    return reelChildInfo.value[realIndex]
 })
+
+watchEffect(() => {
+    const { min, max, value } = props
+    const currentValue = currentActiveReel.value?.value || value
+    const emitValue = Math.min(Math.max(currentValue, min), max)
+    emits('update:value', emitValue)
+})
+
+onMounted(init)
 </script>
 
 <style scoped>
